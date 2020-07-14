@@ -1,2 +1,2 @@
-# codebase_nashta
-codebase backend for NashTa RESTFul API development
+# Codebase NashTa
+Codebase BackeEnd for NashTa RESTFul API development
