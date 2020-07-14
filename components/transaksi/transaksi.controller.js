@@ -1,0 +1,1 @@
+console.log('latihan git coleb');
