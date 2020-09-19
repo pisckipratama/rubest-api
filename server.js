@@ -1,29 +1,46 @@
+// import modules
 const express = require('express');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const colors = require('colors');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const connectDB = require('./app/lib/configs/db');
+const errorHandler = require('./app/lib/middlewares/error');
 
-// call .env file
-dotenv.config({ path: '.env' });
-
+// Load environments, initial app and db
+dotenv.config();
 const app = express();
+connectDB();
 
-// init db
-const pool = require('./lib/db');
-
-// import route
-const productRouter = require('./components/products/products.routes');
-const userRouter = require('./components/users/users.routes');
-
-// check jika node_env=development nampil logging
+// middlewares
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+app.use(cors());
 
-// init and run router
-app.use('/api/v1/products', productRouter);
-app.use('/api/v1/users', userRouter);
+// routes
+const baseURL = '/api/v1';
+const authRouter = require('./app/components/auth/auth_routes');
+app.use(`${baseURL}/auth`, authRouter);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 1337;
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} on port ${PORT}`);
 });
+
+// handle unhandled promise rejection
+process.on('unhandledRejection', (err, promise) => {
+  console.log(`Error: ${err.message}`);
+
+  // close server & exit process
+  server.close(() => process.exit(1));
+});
+
+module.exports = app;
