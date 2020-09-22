@@ -25,7 +25,7 @@ app.use(cors());
 
 // routes
 app.get('/', (_, res) => {
-  res.status(200).json({ status: 'ok', message: 'Rubest API already to use!' });
+  res.status(200).json({ status: 'ok', message: 'Rubest API ready to use!' });
 });
 const baseURL = '/api/v1';
 const authRouter = require('./app/components/auth/auth_routes');
