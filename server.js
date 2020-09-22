@@ -24,6 +24,9 @@ if (process.env.NODE_ENV === 'development') {
 app.use(cors());
 
 // routes
+app.get('/', (_, res) => {
+  res.status(200).json({ status: 'ok', message: 'Rubest API already to use!' });
+});
 const baseURL = '/api/v1';
 const authRouter = require('./app/components/auth/auth_routes');
 app.use(`${baseURL}/auth`, authRouter);
