@@ -1,4 +1,3 @@
-const crypto = require('crypto');
 const asyncHandler = require('../../lib/middlewares/asyncHandler');
 const User = require('../auth/auth_models');
 const ErrorHandler = require('../../lib/helpers/errorResponse');
@@ -45,3 +44,17 @@ const sendTokenResponse = (user, statusCode, res) => {
 
   res.status(statusCode).json({ token });
 };
+
+exports.logout = asyncHandler(async (req, res, next) => {
+  res.cookie('token', 'none', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+
+  req.user = null;
+  
+  res.status(200).json({
+    success: true,
+    data: {}
+  });
+});

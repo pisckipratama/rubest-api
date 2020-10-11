@@ -29,7 +29,9 @@ app.get('/', (_, res) => {
 });
 const baseURL = '/api/v1';
 const authRouter = require('./app/components/auth/auth_routes');
-app.use(`${baseURL}/auth`, authRouter);
+const cashRouter = require('./app/components/cashflow/cashflow_routes');
+app.use(baseURL, authRouter);
+app.use(baseURL, cashRouter);
 
 app.use(errorHandler);
 
