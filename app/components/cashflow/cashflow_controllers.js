@@ -6,16 +6,42 @@ const ErrorHandler = require('../../lib/helpers/errorResponse');
 exports.getCashes = asyncHandler(async (req, res, next) => {
   let { date, size, page } = req.query;
 
-  let cashes = await Cash.find({ date });
+  let total = await Cash.aggregate([
+    {
+      '$group': {
+        '_id': null,
+        'total': {
+          '$sum': '$amount'
+        }
+      }
+    }
+  ]);
+
+  
+  let cashes = await Cash.find();
   if (date) {
     cashes = await Cash.find({ date });
-  } else {
-    cashes = await Cash.find();
+    total = await Cash.aggregate([
+      {
+        '$match': {
+          'date': date
+        }
+      }, {
+        '$group': {
+          '_id': null, 
+          'total': {
+            '$sum': '$amount'
+          }
+        }
+      }
+    ])
   }
-
+  
+  total = total[0].total;
   res.status(200).json({
     success: true,
-    content: cashes
+    content: cashes,
+    total
   });
 });
 
