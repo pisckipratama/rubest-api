@@ -5,9 +5,13 @@ const CashflowSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please enter an item name.']
   },
-  total: {
+  amount: {
     type: Number,
-    required: [true, 'Please enter total spending']
+    required: [true, 'Please enter amount spending']
+  },
+  date: {
+    type: String,
+    required: [true, 'Please enter date spending']
   },
   notes: String,
   createdAt: {

@@ -4,7 +4,15 @@ const User = require('../auth/auth_models');
 const ErrorHandler = require('../../lib/helpers/errorResponse');
 
 exports.getCashes = asyncHandler(async (req, res, next) => {
-  const cashes = await Cash.find();
+  let { date, size, page } = req.query;
+
+  let cashes = await Cash.find({ date });
+  if (date) {
+    cashes = await Cash.find({ date });
+  } else {
+    cashes = await Cash.find();
+  }
+
   res.status(200).json({
     success: true,
     content: cashes
@@ -12,15 +20,17 @@ exports.getCashes = asyncHandler(async (req, res, next) => {
 });
 
 exports.getCashById = asyncHandler(async (req, res, next) => {
-  const {id} = req.params;
+  const { id } = req.params;
   const cash = await Cash.findById(id);
+  if (!cash) return next(new ErrorHandler(`Resource not found`, 404));
+
   res.status(200).json({
     success: true,
     content: cash
   });
 });
 
-exports.addCash = asyncHandler(async(req, res, next) => {
+exports.addCash = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user._id);
   if (!user) return next(new ErrorHandler(`Unauthorize user`, 400));
 
@@ -29,8 +39,8 @@ exports.addCash = asyncHandler(async(req, res, next) => {
 });
 
 exports.updateCash = asyncHandler(async (req, res, next) => {
-  const {id} = req.params;
-  
+  const { id } = req.params;
+
   const user = await User.findById(req.user._id);
   if (!user) return next(new ErrorHandler(`Unauthorize user`, 400));
 
@@ -42,7 +52,7 @@ exports.updateCash = asyncHandler(async (req, res, next) => {
     new: true,
     runValidators: true
   });
-  
+
 
   res.status(200).json({ success: true, message: `update cashflow ${req.params.id} success`, content: cash });
 });
