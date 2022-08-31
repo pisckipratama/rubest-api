@@ -6,6 +6,7 @@ pipeline {
       agent {
         docker {
           image 'node:16-alpine'
+          args '-v $HOME/.npm:$HOME/.npm'
         }
       }
 
